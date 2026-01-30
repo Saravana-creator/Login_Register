@@ -1,121 +1,52 @@
 # User Management System
 
-A complete user registration, login, and profile management system using HTML, CSS, JavaScript, PHP, MySQL, MongoDB, and Redis.
+#
+The User Management System is a web-based application designed to facilitate user registration, authentication, and profile administration. This system utilizes a three-tier architecture comprising a client-side interface, a server-side processing layer, and a database management layer.
 
-## Tech Stack
-- **Frontend**: HTML, CSS (Bootstrap), JavaScript (jQuery)
-- **Backend**: PHP
-- **Databases**: MySQL (user authentication), MongoDB (profile data)
-- **Session Management**: Redis
-- **AJAX**: jQuery for all backend interactions
+## System Features
+- User Registration: Allows new users to create accounts with verified credentials.
+- Authentication: Secure login mechanism with session persistence.
+- Profile Dashboard: Interface for users to view and modify personal information.
+- Session Handling: Server-side session management using Redis.
+- Data Persistence: Structured storage of user data using MySQL.
 
-## Setup Instructions
+## Technology Stack
+The application is built using the following technologies:
+- Frontend: HTML, CSS, JavaScript, jQuery, Bootstrap
+- Backend: PHP
+- Database: MySQL
+- Session Store: Redis
 
-### 1. Prerequisites
-- XAMPP (Apache, MySQL, PHP)
-- MongoDB
-- Redis
-- Composer (for MongoDB PHP driver)
+## Prerequisites
+Before deploying the application, ensure the following environments are configured:
+- Web Server (Apache via XAMPP or equivalent)
+- PHP Runtime (Version 7.4 or later)
+- MySQL Database Server
+- Redis Server
 
-### 2. Database Setup
+## Installation Instructions
 
-**MySQL:**
-```sql
--- Run this in phpMyAdmin or MySQL command line
-CREATE DATABASE IF NOT EXISTS guvi_internship;
-USE guvi_internship;
+1. Deployment
+Place the project directory into the web server document root (typically htdocs).
 
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+2. Database Setup
+Access the MySQL database management interface.
+Create a new database named guvi_intern.
+Execute the setup.sql script provided in the root directory to initialize the database schema.
 
-**MongoDB:**
-- Start MongoDB service
-- Database: `internship`
-- Collection: `profiles` (auto-created)
+3. Configuration
+Locate the configuration files in the php/config/ directory.
+Edit mysql.php to verify the database connection parameters (host, username, password, database name).
+Edit redis.php to verify the Redis server connection parameters.
 
-**Redis:**
-- Start Redis server on default port 6379
+4. Execution
+Start the Apache, MySQL, and Redis services.
+Open a web browser and navigate to the application URL (e.g., localhost/internship/login.html).
 
-### 3. PHP Dependencies
-```bash
-cd php/config
-composer require mongodb/mongodb
-```
+## Directory Structure
+- assets/ - Static assets including stylesheets and images
+- js/ - Client-side scripts for application logic and AJAX requests
+- php/ - Server-side scripts for data processing and authentication
+- setup.sql - Database schema definition script
 
-### 4. Configuration
-Update database credentials in:
-- `php/config/mysql.php`
-- `php/config/mongo.php` 
-- `php/config/redis.php`
 
-### 5. File Structure
-```
-internship/
-├── assets/css/styles.css
-├── js/
-│   ├── register.js
-│   ├── login.js
-│   └── profile.js
-├── php/
-│   ├── auth/
-│   │   ├── register.php
-│   │   └── login.php
-│   ├── config/
-│   │   ├── mysql.php
-│   │   ├── mongo.php
-│   │   └── redis.php
-│   └── profile/
-│       ├── get_profile.php
-│       └── update_profile.php
-├── index.html
-├── register.html
-├── login.html
-└── profile.html
-```
-
-## Features
-
-### Registration (register.html)
-- User registration with username, email, password
-- Data stored in MySQL with prepared statements
-- Password hashing
-- Email uniqueness validation
-
-### Login (login.html)
-- Email/password authentication
-- Session creation in Redis
-- LocalStorage for client-side session management
-- Redirect to profile on success
-
-### Profile (profile.html)
-- Session validation via Redis
-- Display user info from MySQL
-- Additional profile data (age, DOB, contact) stored in MongoDB
-- Profile update functionality
-- Auto-redirect to login if session invalid
-
-## Security Features
-- Password hashing (PHP password_hash)
-- Prepared statements (SQL injection prevention)
-- Session management with Redis
-- Input validation
-- CSRF protection via method validation
-
-## Usage Flow
-1. **Register**: Create account → Stored in MySQL
-2. **Login**: Authenticate → Create Redis session → Redirect to profile
-3. **Profile**: View/update profile → Additional data in MongoDB
-
-## API Endpoints
-- `POST /php/auth/register.php` - User registration
-- `POST /php/auth/login.php` - User login
-- `POST /php/profile/get_profile.php` - Get profile data
-- `POST /php/profile/update_profile.php` - Update profile data
-
-All endpoints use prepared statements and session validation.

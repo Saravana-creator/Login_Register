@@ -14,87 +14,93 @@
 
     <div class="dashboard-wrapper">
         <!-- Navbar -->
-        <!-- Navbar -->
-        <nav class="dashboard-nav">
-            <div></div> <!-- Empty spacer -->
-            <button class="btn btn-outline-custom btn-sm" id="logoutBtn"
-                onclick="localStorage.clear(); window.location.href='login.html'">
-                Sign out
-            </button>
-        </nav>
+        <div class="dashboard-wrapper">
+            <!-- Navbar -->
+            <nav class="dashboard-nav">
+                <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary-color);">Profile Page</div>
+                <button class="btn"
+                    style="width: auto; padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 50px; background: white; color: var(--text-main);"
+                    id="logoutBtn" onclick="localStorage.clear(); window.location.href='login.html'">
+                    Sign out
+                </button>
+            </nav>
 
-        <!-- Main Content -->
-        <div class="dashboard-content">
-            <div class="section-header">
-                <h2 class="section-title">Profile Settings</h2>
-                <p class="text-muted mb-0">Manage your personal information and preferences.</p>
-            </div>
+            <!-- Main Content -->
+            <div class="dashboard-content">
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <h2 class="profile-title">Profile Settings</h2>
+                        <p class="profile-desc">Manage your personal information and preferences.</p>
+                    </div>
 
-            <div class="row">
-                <!-- Form Area -->
-                <div class="col-md-12">
                     <div id="msg" class="mb-4"></div>
 
                     <form id="profileForm">
-                        <div class="row g-4">
-                            <div class="col-12">
-                                <h5 class="h6 mb-3">Identification</h5>
-                            </div>
+                        <div style="margin-bottom: 2rem;">
+                            <h5
+                                style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.5rem; letter-spacing: 0.05em;">
+                                Identification</h5>
 
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="username" placeholder="Username">
-                                    <label for="username">Display Name</label>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="username" class="form-label">Display Name</label>
+                                        <input type="text" class="form-control" id="username" placeholder="Username">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email"
+                                            placeholder="name@example.com">
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
-                                    <label for="email">Email Address</label>
+                        <div style="margin-bottom: 2rem;">
+                            <h5
+                                style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.5rem; letter-spacing: 0.05em;">
+                                Personal Details</h5>
+
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" placeholder="Age">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="dob" class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" id="dob">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="contact" placeholder="Contact">
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-12 mt-4">
-                                <h5 class="h6 mb-3">Personal Details</h5>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" id="age" placeholder="Age">
-                                    <label for="age">Age</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-floating">
-                                    <input type="date" class="form-control" id="dob" placeholder="Date of Birth">
-                                    <label for="dob">Date of Birth</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control" id="contact" placeholder="Contact">
-                                    <label for="contact">Phone Number</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mt-4 d-flex justify-content-end">
-                                <button type="button" class="btn btn-light border me-2">Cancel</button>
-                                <button type="submit" class="btn btn-primary-custom px-4">
-                                    Save changes
-                                </button>
-                            </div>
+                        <div class="d-flex justify-content-end pt-4" style="border-top: 1px solid #f1f5f9;">
+                            <button type="submit" class="btn btn-primary-custom"
+                                style="width: auto; border-radius: 50px; padding-left: 2rem; padding-right: 2rem;">
+                                Save changes
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="js/profile.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="js/profile.js"></script>
 
 </body>
 

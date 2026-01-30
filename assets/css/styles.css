@@ -1,204 +1,226 @@
-/* Minimalist Monochrome Theme - Centered Layout (No Box) */
+/* Sky Cloud Theme (Based on User Image) */
 :root {
-    --primary-color: #171717;
-    /* Neutral 900 */
-    --primary-hover: #404040;
-    /* Neutral 700 */
-    --text-main: #171717;
-    --text-muted: #737373;
-    /* Neutral 500 */
-    --bg-color: #ffffff;
-    --border-color: #e5e5e5;
-    /* Neutral 200 */
+    --bg-gradient-start: #e0f7fa;
+    /* Light cyan/sky */
+    --bg-gradient-end: #e3f2fd;
+    /* Light blue */
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    /* Slate 800 */
+    --text-muted: #64748b;
+    /* Slate 500 */
+    --input-bg: #f1f5f9;
+    /* Slate 100 */
+    --primary-color: #111111;
+    /* Black */
+    --primary-hover: #000000;
+    --border-radius-card: 24px;
+    --border-radius-input: 12px;
 }
 
 body {
-    background: var(--bg-color);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    min-height: 100vh;
-    margin: 0;
-    padding: 2rem;
+    background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
+        radial-gradient(at 0% 0%, hsla(192, 90%, 92%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(205, 85%, 90%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(196, 80%, 94%, 1) 0, transparent 50%);
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--text-main);
+    font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+    /* Outfit matches the rounded friendly vibe */
+    line-height: 1.6;
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 }
 
-/* --- CENTERED AUTH LAYOUT --- */
+/* Typography Overrides */
+h1,
+h2,
+h3,
+.brand-title {
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+/* Layout Utilities */
 .auth-container {
+    flex: 1;
+    /* Take remaining height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-card {
     width: 100%;
-    max-width: 440px;
-    margin: 0 auto;
+    max-width: 400px;
+    background: var(--card-bg);
+    padding: 3rem 2.5rem;
+    border-radius: var(--border-radius-card);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    /* Soft deep shadow */
     text-align: center;
-    /* Center header texts */
+    /* Center everything in card */
+}
+
+.brand-section {
+    margin-bottom: 2rem;
 }
 
 .brand-title {
-    font-weight: 800;
-    font-size: 2.25rem;
-    letter-spacing: -1px;
-    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .brand-subtitle {
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    max-width: 280px;
+    margin: 0 auto;
 }
 
-/* Inputs - Clean & Minimal */
-.form-floating {
+/* Forms & Inputs */
+.form-group {
+    margin-bottom: 1.25rem;
+    position: relative;
     text-align: left;
-    /* Align inputs left */
+    /* Keep inputs left-aligned internally usually, but design shows centered placeholders, let's stick to standard internal alignment */
+}
+
+.input-icon-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .form-control {
-    background-color: #ffffff;
-    /* Clean white */
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1rem;
-    font-size: 1rem;
-    transition: all 0.2s;
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    /* Left padding for icon */
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-main);
+    background-color: var(--input-bg);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-input);
+    transition: all 0.2s ease;
 }
 
 .form-control:focus {
-    background-color: #ffffff;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 1px var(--primary-color);
+    outline: none;
+    background-color: #fff;
+    border-color: #e2e8f0;
+    box-shadow: 0 0 0 4px rgba(224, 242, 254, 0.6);
+    /* Light blue glow */
 }
 
-.form-floating>label {
-    padding-left: 1rem;
-    color: var(--text-muted);
+.form-control::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
 }
 
-/* Buttons - Sharp & Bold */
+/* Button Styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 50px;
+    /* Pill shape from image */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    width: 100%;
+}
+
 .btn-primary-custom {
     background-color: var(--primary-color);
     color: white;
-    border: none;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-    margin-top: 1rem;
 }
 
 .btn-primary-custom:hover {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
-    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/* Links */
-.auth-footer {
-    margin-top: 2.5rem;
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-.auth-footer a {
-    color: var(--primary-color);
-    font-weight: 700;
-    text-decoration: none;
-    border-bottom: 2px solid transparent;
-    transition: border-bottom 0.2s;
-}
-
-.auth-footer a:hover {
-    border-bottom-color: var(--primary-color);
-}
-
-/* --- DASHBOARD LAYOUT (Profile) --- */
-.dashboard-wrapper {
-    width: 100%;
-    /* Dashboard handles its own layout, so we reset body flex centering for it if needed, 
-       but here we just let it take full width inside the body flex or override body */
-}
-
-/* Specific override for profile page to align top */
-body.profile-page {
-    display: block;
-    align-items: unset;
-    justify-content: unset;
+/* Password Toggle */
+.password-toggle-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
     padding: 0;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
 }
 
+.password-toggle-btn:hover {
+    color: var(--text-main);
+}
+
+.password-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Profile Page Overrides to match theme */
 .dashboard-nav {
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
-}
-
-.dashboard-logo {
-    font-weight: 700;
-    font-size: 1.25rem;
-    letter-spacing: -0.5px;
 }
 
 .dashboard-content {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 3rem auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
-.section-header {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
-}
-
-.section-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.profile-avatar-large {
-    width: 100px;
-    height: 100px;
-    background: #f5f5f5;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-}
-
-.btn-outline-custom {
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.5rem 1.25rem;
-    border-radius: 6px;
-    transition: all 0.2s;
+.profile-section {
     background: white;
+    padding: 2.5rem;
+    border-radius: var(--border-radius-card);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.btn-outline-custom:hover {
-    border-color: var(--primary-color);
-    background: var(--primary-color);
-    color: white;
+.profile-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
-/* Mobile Tweaks */
-@media (max-width: 576px) {
-    body {
-        padding: 1.5rem;
-    }
-
-    .brand-title {
-        font-size: 1.75rem;
-    }
-
-    .dashboard-content {
-        padding: 0 1rem;
-        margin-top: 1.5rem;
-    }
+.profile-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 1rem;
 }
