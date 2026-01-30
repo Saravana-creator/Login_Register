@@ -1,0 +1,12 @@
+{
+    "name": "saravanaperumal/internship",
+    "authors": [
+        {
+            "name": "Saravana-creator",
+            "email": "saravana24057@gmail.com"
+        }
+    ],
+    "require": {
+        "mongodb/mongodb": "^2.1"
+    }
+}
