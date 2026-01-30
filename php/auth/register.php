@@ -51,6 +51,11 @@ if ($stmt->execute()) {
                  throw new Exception("MongoDB Insert Failed");
             }
             
+            // Log to debug file
+            $logFile = __DIR__ . '/../../debug_mongo_update.log';
+            $msg = "New User Registered: ID=$userId, Email=$email";
+            file_put_contents($logFile, date('[Y-m-d H:i:s] ') . $msg . "\n", FILE_APPEND);
+
             error_log("Result: Initial MongoDB profile created for user $userId");
         } catch (Exception $e) {
             error_log("Error creating MongoDB profile: " . $e->getMessage());

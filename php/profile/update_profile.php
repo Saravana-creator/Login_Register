@@ -3,13 +3,20 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Log output to a file we can inspect if needed, or just stderr
+// Debug Log File - absolute path to be safe/simple
+$logFile = __DIR__ . '/debug_log.txt';
+function logToDebug($msg) {
+    global $logFile;
+    $date = date('[Y-m-d H:i:s] ');
+    file_put_contents($logFile, $date . $msg . "\n", FILE_APPEND);
+}
+
 $debugLog = [];
 
 try {
-    require "../config/redis.php";
-    require "../config/mysql.php"; // This now uses port 3307
-    require "../config/mongo.php";
+    require_once "../config/redis.php";
+    require_once "../config/mysql.php"; 
+    require_once "../config/mongo.php"; // Establishes $collection
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception("Method not allowed");
@@ -23,13 +30,13 @@ try {
     $contact = $_POST['contact'] ?? '';
     $newEmail = $_POST['new_email'] ?? '';
 
-    $debugLog[] = "Received - Email: $email, NewEmail: $newEmail, Username: $username";
+    $debugLog[] = "Request received for email: $email";
+    logToDebug("Request: Email=$email, Session=$sessionId");
 
     if (empty($email) || empty($sessionId)) {
         throw new Exception("Email and session required");
     }
 
-    // ... Session validation ...
     // Validate session in Redis
     $sessionData = $redis->get("session:" . $sessionId);
     if (!$sessionData) {
@@ -47,7 +54,36 @@ try {
     }
     
     $userIdInt = (int)$user['id'];
-    $debugLog[] = "User Found - ID: $userIdInt, Old Name: {$user['name']}, Old Email: {$user['email']}";
+    logToDebug("User found. ID: " . $userIdInt);
+
+    // ---------------------------------------------------------
+    // SELF-HEALING: Check for String-based ID and fix if needed
+    // ---------------------------------------------------------
+    $existingProfileString = $collection->findOne(["userId" => (string)$userIdInt]);
+    if ($existingProfileString) {
+        // If we found a string-ID profile, rename it to int-ID
+        // First check if an int-ID profile also exists
+        $existingProfileInt = $collection->findOne(["userId" => $userIdInt]);
+        
+        if ($existingProfileInt) {
+            // Both exist. We should probably merge or just delete the string one. 
+            // We'll delete data and assume Int one is the master or new master.
+            // A merge is complex, let's keep it simple: Int prevails.
+            $collection->deleteOne(["_id" => $existingProfileString['_id']]);
+            $debugLog[] = "Self-Healing: Removed duplicate String-ID profile.";
+            logToDebug("Self-Healing: Removed duplicate String-ID profile.");
+        } else {
+            // Only string exists. Convert it.
+            $collection->updateOne(
+                ["_id" => $existingProfileString['_id']],
+                ['$set' => ["userId" => $userIdInt]]
+            );
+            $debugLog[] = "Self-Healing: Converted String userId to Integer userId.";
+            logToDebug("Self-Healing: Converted String userId to Integer userId.");
+        }
+    }
+    // ---------------------------------------------------------
+
 
     // Handle Email Update
     $emailChanged = false;
@@ -70,40 +106,36 @@ try {
              $finalEmail = $newEmail;
              $debugLog[] = "MySQL Email Updated from {$user['email']} to $newEmail";
         } else {
-             $debugLog[] = "MySQL Email Update Failed: " . $conn->error;
+             throw new Exception("MySQL Email Update Failed: " . $conn->error);
         }
     }
 
-    // Update username in MySQL if provided and different
-    // ...
     // Update username in MySQL if provided and different
     if (!empty($username) && $username !== $user['name']) {
         $stmt = $conn->prepare("UPDATE users SET name=? WHERE id=?");
         $stmt->bind_param("si", $username, $userIdInt);
         if ($stmt->execute()) {
-            $debugLog[] = "MySQL Name Updated Successfully " . $stmt->affected_rows . " rows";
+            $debugLog[] = "MySQL Name Updated Successfully";
         } else {
             $debugLog[] = "MySQL Name Update Failed: " . $conn->error;
         }
     }
 
     // Update profile in MongoDB
-    // We use the NEW username if provided, otherwise the OLD one from MySQL
     $finalUsername = !empty($username) ? $username : $user['name'];
     
-    // ...
-    // ...
-
     $updateData = [
         '$set' => [
             "username" => $finalUsername,
-            "email" => $finalEmail, // Use the NEW email
+            "email" => $finalEmail,
             "age" => $age,
             "dob" => $dob,
             "contact" => $contact,
             "updated_at" => date('Y-m-d H:i:s')
         ]
     ];
+
+    logToDebug("Updating MongoDB for userId $userIdInt with data: " . json_encode($updateData));
 
     $result = $collection->updateOne(
         ["userId" => $userIdInt],
@@ -112,6 +144,7 @@ try {
     );
 
     $debugLog[] = "Mongo Result: Matched=" . $result->getMatchedCount() . ", Modified=" . $result->getModifiedCount() . ", Upserted=" . $result->getUpsertedCount();
+    logToDebug("Mongo Update Result: M=" . $result->getMatchedCount() . " Mod=" . $result->getModifiedCount() . " U=" . $result->getUpsertedCount());
 
     $response = [
         "success" => true, 
@@ -128,6 +161,7 @@ try {
 
 } catch (Exception $e) {
     http_response_code(500);
+    logToDebug("ERROR: " . $e->getMessage());
     echo json_encode([
         "error" => $e->getMessage(),
         "debug" => $debugLog

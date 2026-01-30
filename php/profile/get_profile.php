@@ -35,8 +35,20 @@ if (!$user) {
 }
 
 // Get profile data from MongoDB
+// Get profile data from MongoDB with loose ID matching
 try {
-    $profile = $collection->findOne(["userId" => (int)$user['id']]);
+    // Search for both Integer and String ID
+    $criteria = [
+        '$or' => [
+            ["userId" => (int)$user['id']],
+            ["userId" => (string)$user['id']]
+        ]
+    ];
+    $profile = $collection->findOne($criteria);
+    
+    // Log for debugging
+    $logMsg = "GetProfile: UserID {$user['id']} -> " . ($profile ? "Found" : "Not Found");
+    file_put_contents(__DIR__ . '/debug_log.txt', date('[Y-m-d H:i:s] ') . $logMsg . "\n", FILE_APPEND);
     
     if (isset($usingMongoDB) && $usingMongoDB) {
         error_log("Profile retrieved from MongoDB for userId: " . $user['id']);

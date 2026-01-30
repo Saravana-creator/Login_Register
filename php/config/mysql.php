@@ -47,17 +47,4 @@ if (!$conn->query($usersTable)) {
     exit(json_encode(["status" => "error", "message" => "Error creating users table: " . $conn->error]));
 }
 
-$profilesTable = "CREATE TABLE IF NOT EXISTS profiles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    userId INT NOT NULL,
-    age VARCHAR(10),
-    dob DATE,
-    contact VARCHAR(20),
-    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-)";
-if (!$conn->query($profilesTable)) {
-    http_response_code(500);
-    exit(json_encode(["status" => "error", "message" => "Error creating profiles table: " . $conn->error]));
-}
-
 ?>
